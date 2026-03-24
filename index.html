@@ -407,6 +407,32 @@ footer{background:var(--dark);padding:4.5rem 5vw 2.5rem;}
   .mob-gallery-hint svg{width:16px;height:16px;flex-shrink:0;}
 }
 @media(min-width:769px){.mob-gallery-hint{display:none;}}
+/* ── FORM VALIDATION ── */
+.f-input:required:invalid:not(:placeholder-shown),
+textarea:required:invalid:not(:placeholder-shown){
+  border-color: var(--rose) !important;
+  box-shadow: 0 0 0 3px rgba(196,112,90,.15);
+}
+.f-error{color:var(--rose);font-size:.72rem;font-weight:600;margin-top:-.6rem;margin-bottom:.5rem;display:none;}
+.f-error.show{display:block;}
+.f-input.err,.f-textarea.err,.f-select.err{border-color:var(--rose)!important;box-shadow:0 0 0 3px rgba(196,112,90,.18);}
+.f-input.ok{border-color:#2D6A4F!important;}
+.f-input.err,.f-textarea.err{border-color:var(--rose)!important;box-shadow:0 0 0 3px rgba(196,112,90,.18);}
+.f-input.ok{border-color:#2D6A4F!important;}
+
+
+.phone-wrap{position:relative;display:flex;gap:0;}
+.flag-select{position:relative;flex-shrink:0;}
+.flag-btn{height:100%;padding:.85rem .8rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-right:none;border-radius:11px 0 0 11px;color:#fff;cursor:pointer;display:flex;align-items:center;gap:.4rem;font-size:.85rem;white-space:nowrap;transition:background .2s;}
+.flag-btn:hover{background:rgba(255,255,255,.13);}
+.flag-dropdown{position:absolute;top:calc(100% + 4px);left:0;z-index:500;background:#1e2440;border:1px solid rgba(255,255,255,.15);border-radius:10px;width:260px;max-height:240px;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.flag-dropdown input{width:100%;padding:.6rem .9rem;background:rgba(255,255,255,.07);border:none;border-bottom:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Nunito',sans-serif;font-size:.8rem;outline:none;}
+.flag-dropdown input::placeholder{color:rgba(255,255,255,.35);}
+.flag-option{padding:.55rem .9rem;cursor:pointer;display:flex;align-items:center;gap:.7rem;font-size:.8rem;color:rgba(255,255,255,.75);transition:background .15s;}
+.flag-option:hover{background:rgba(255,255,255,.08);}
+.flag-option .f-code{color:rgba(255,255,255,.4);font-size:.72rem;margin-left:auto;}
+.phone-input-wrap{flex:1;}
+.phone-input-wrap .f-input{border-radius:0 11px 11px 0;width:100%;}
 </style>
 </head>
 <body>
@@ -771,29 +797,56 @@ footer{background:var(--dark);padding:4.5rem 5vw 2.5rem;}
         <a href="https://www.linkedin.com/in/khaoula-elakel-4aa821237/" target="_blank" class="csoc">in</a>
       </div>
     </div>
-    <form id="contactForm" class="c-form reveal rv2" action="https://formspree.io/f/mwvrobnb" method="POST">
-      <h3 data-en="Send a <em>message</em>" data-fr="Envoyer un <em>message</em>">Send a <em>message</em></h3>
-      <p data-en="I'll get back to you within 24 hours." data-fr="Je vous répondrai dans les 24 heures.">I'll get back to you within 24 hours.</p>
-      <div class="f-row">
-        <input type="text" class="f-input" name="name" data-en-placeholder="Your name" data-fr-placeholder="Votre nom" placeholder="Your name">
-        <input type="email" class="f-input" name="email" data-en-placeholder="Email address" data-fr-placeholder="Adresse e-mail" placeholder="Email address">
+   <form id="contactForm" class="c-form reveal rv2" action="https://formspree.io/f/mpqoawvz" method="POST" novalidate>
+  <h3 data-en="Send a <em>message</em>" data-fr="Envoyer un <em>message</em>">Send a <em>message</em></h3>
+  <p data-en="I'll get back to you within 24 hours." data-fr="Je vous répondrai dans les 24 heures.">I'll get back to you within 24 hours.</p>
+  <div class="f-row">
+    <input type="text" class="f-input" name="name" required data-en-placeholder="Your name" data-fr-placeholder="Votre nom" placeholder="Your name">
+    <input type="email" class="f-input" name="email" required data-en-placeholder="Email address" data-fr-placeholder="Adresse e-mail" placeholder="Email address">
+  </div>
+  <div class="f-row" style="margin-top:-.6rem;margin-bottom:.5rem">
+    <span class="f-error" id="errName"></span>
+    <span class="f-error" id="errEmail"></span>
+  </div>
+  <div class="f-row">
+  <div class="phone-wrap" style="flex:1;">
+    <div class="flag-select" id="flagSelect">
+     <button type="button" class="flag-btn" id="flagBtn" onclick="toggleFlagDD()">
+  <img id="flagEmoji" src="https://flagcdn.com/w20/ma.png" style="width:22px;height:15px;object-fit:cover;border-radius:2px;">
+  <span id="flagCode">+212</span>
+  <span style="font-size:.6rem;opacity:.5;">▼</span>
+</button>
+      <div class="flag-dropdown" id="flagDD" style="display:none;">
+        <input type="text" id="flagSearch" placeholder="Search country..." oninput="filterFlags(this.value)">
+        <div id="flagList"></div>
       </div>
-      <div class="f-row">
-        <input type="tel" class="f-input" name="phone" data-en-placeholder="Phone number" data-fr-placeholder="Numéro de téléphone" placeholder="Phone number">
-        <input type="text" class="f-input" name="website" data-en-placeholder="Website (optional)" data-fr-placeholder="Site web (optionnel)" placeholder="Website (optional)">
-      </div>
-      <select class="f-select" name="enquiry_type" id="enquirySelect">
-        <option data-en="Type of enquiry..." data-fr="Type de demande...">Type of enquiry...</option>
-        <option data-en="Full-time position" data-fr="Poste à temps plein">Full-time position</option>
-        <option data-en="Freelance / contract" data-fr="Freelance / contrat">Freelance / contract</option>
-        <option data-en="Residential design" data-fr="Design résidentiel">Residential design</option>
-        <option data-en="Commercial design" data-fr="Design commercial">Commercial design</option>
-        <option data-en="Hospitality design" data-fr="Design hôtelier">Hospitality design</option>
-        <option data-en="Collaboration" data-fr="Collaboration">Collaboration</option>
-      </select>
-      <textarea class="f-textarea" name="message" data-en-placeholder="Tell me about your project or opportunity..." data-fr-placeholder="Parlez-moi de votre projet ou opportunité..." placeholder="Tell me about your project or opportunity..."></textarea>
-      <button type="submit" class="f-btn" id="fBtn" data-en="Send Message →" data-fr="Envoyer le Message →">Send Message →</button>
     </div>
+    <div class="phone-input-wrap">
+      <input type="tel" class="f-input" name="phone" id="phoneInput" required data-en-placeholder="6XX XXX XXX" data-fr-placeholder="6XX XXX XXX" placeholder="6XX XXX XXX" novalidate>
+    </div>
+  </div>
+  <input type="text" class="f-input" name="website" data-en-placeholder="Website (optional)" data-fr-placeholder="Site web (optionnel)" placeholder="Website (optional)">
+</div>
+<div style="margin-top:-.6rem;margin-bottom:.5rem">
+  <span class="f-error" id="errPhone"></span>
+</div>
+  <div style="margin-top:-.6rem;margin-bottom:.5rem">
+    <span class="f-error" id="errPhone"></span>
+  </div>
+  <select class="f-select" name="enquiry_type" id="enquirySelect">
+    <option data-en="Type of enquiry..." data-fr="Type de demande...">Type of enquiry...</option>
+    <option data-en="Full-time position" data-fr="Poste à temps plein">Full-time position</option>
+    <option data-en="Freelance / contract" data-fr="Freelance / contrat">Freelance / contract</option>
+    <option data-en="Residential design" data-fr="Design résidentiel">Residential design</option>
+    <option data-en="Commercial design" data-fr="Design commercial">Commercial design</option>
+    <option data-en="Hospitality design" data-fr="Design hôtelier">Hospitality design</option>
+    <option data-en="Collaboration" data-fr="Collaboration">Collaboration</option>
+  </select>
+  <input type="hidden" name="phone_full" id="phoneFullInput">
+  <textarea class="f-textarea" name="message" required data-en-placeholder="Tell me about your project or opportunity..." data-fr-placeholder="Parlez-moi de votre projet ou opportunité..." placeholder="Tell me about your project or opportunity..."></textarea>
+  <div class="f-error" id="fError"></div>
+  <button type="submit" class="f-btn" id="fBtn" data-en="Send Message →" data-fr="Envoyer le Message →">Send Message →</button>
+</form>
   </div>
 </section>
 
@@ -1094,21 +1147,142 @@ document.addEventListener("keydown",function(e){
 /* ── CONTACT FORM ── */
 var form=document.getElementById("contactForm");
 if(form){
+  function setErr(id,msg){var el=document.getElementById(id);if(el){el.textContent=msg;el.classList.toggle('show',!!msg);}}
+  function markField(name,isErr){var el=form.querySelector('[name="'+name+'"]');if(el){el.classList.toggle('err',isErr);el.classList.toggle('ok',!isErr&&el.value.trim());}}
+
+  ['name','email','phone'].forEach(function(n){
+    var el=form.querySelector('[name="'+n+'"]');
+    if(!el)return;
+    el.addEventListener('blur',function(){
+      var v=this.value.trim();
+      if(n==='name'){setErr('errName',!v?(currentLang==='en'?'Name is required.':'Nom requis.'):'');markField('name',!v);}
+      if(n==='email'){var ok=/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v);setErr('errEmail',!v?(currentLang==='en'?'Email is required.':'E-mail requis.'):!ok?(currentLang==='en'?'Invalid email (e.g. name@example.com).':'E-mail invalide.'):'');markField('email',!v||!ok);}
+      if(n==='phone'){var ok=v.length>=6;
+  if(!v){setErr('errPhone','');markField('phone',false);return;}setErr('errPhone',!v?(currentLang==='en'?'Phone with country code required (e.g. +212 6XXXXXXXX).':'Téléphone avec indicatif requis.'):!ok?(currentLang==='en'?'Use format: +212 6XXXXXXXX.':'Format: +212 6XXXXXXXX.'):'');markField('phone',!v||!ok);}
+    });
+  });
+
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var btn=document.getElementById("fBtn");
-    btn.textContent=currentLang==="en"?"Sending...":"Envoi en cours...";
-    btn.style.opacity="0.7";
-    fetch("https://formspree.io/f/mwvrobnb",{method:"POST",body:new FormData(form),headers:{Accept:"application/json"}})
+    var isEN=currentLang==="en";
+    var name=form.querySelector('[name="name"]').value.trim();
+    var email=form.querySelector('[name="email"]').value.trim();
+var phone=selectedCode+" "+form.querySelector('[name="phone"]').value.trim();    var message=form.querySelector('[name="message"]').value.trim();
+    var enquiry=form.querySelector('[name="enquiry_type"]').value;
+    var emailOk=/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+var phoneOk=form.querySelector('[name="phone"]').value.trim().length>=6;    var valid=true;
+var phone=selectedCode+" "+form.querySelector('[name="phone"]').value.trim();
+
+    setErr('errName',!name?(isEN?'Name is required.':'Nom requis.'):'');markField('name',!name);if(!name)valid=false;
+    setErr('errEmail',!email?(isEN?'Email is required.':'E-mail requis.'):!emailOk?(isEN?'Invalid email (e.g. name@example.com).':'E-mail invalide.'):'');markField('email',!email||!emailOk);if(!email||!emailOk)valid=false;
+    setErr('errPhone',!form.querySelector('[name="phone"]').value.trim()?(isEN?'Phone number is required.':'Numéro de téléphone requis.'):!phoneOk?(isEN?'Please enter a valid phone number.':'Numéro invalide.'):'');markField('phone',!phone||!phoneOk);if(!phone||!phoneOk)valid=false;
+
+    var errMain=document.getElementById("fError");
+    if(!message){errMain.textContent=isEN?'Please describe your project.':'Veuillez décrire votre projet.';errMain.classList.add('show');valid=false;}
+    else if(enquiry==='Type of enquiry...'||enquiry==='Type de demande...'){errMain.textContent=isEN?'Please select a type of enquiry.':'Veuillez sélectionner un type de demande.';errMain.classList.add('show');valid=false;}
+    else{errMain.classList.remove('show');}
+
+    if(!valid)return;
+
+    btn.textContent=isEN?"Sending...":"Envoi en cours...";btn.style.opacity="0.7";
+    document.getElementById("phoneFullInput").value=selectedCode+" "+form.querySelector('[name="phone"]').value.trim();
+    fetch("https://formspree.io/f/mpqoawvz",{method:"POST",body:new FormData(form),headers:{Accept:"application/json"}})
     .then(function(r){
       if(r.ok){
-        btn.textContent=currentLang==="en"?"✓ Message Sent!":"✓ Message Envoyé !";
+        btn.textContent=isEN?"✓ Message Sent!":"✓ Message Envoyé !";
         btn.style.background="#2D6A4F";btn.style.opacity="1";form.reset();
-        setTimeout(function(){btn.textContent=currentLang==="en"?"Send Message →":"Envoyer le Message →";btn.style.background="";},3000);
+        ['errName','errEmail','errPhone'].forEach(function(id){setErr(id,'');});
+        document.getElementById('fError').classList.remove('show');
+        ['name','email','phone'].forEach(function(n){markField(n,false);});
+        setTimeout(function(){btn.textContent=isEN?"Send Message →":"Envoyer le Message →";btn.style.background="";},3000);
       }else{btn.textContent="Error — try again";btn.style.opacity="1";}
     }).catch(function(){btn.textContent="Error — try again";btn.style.opacity="1";});
   });
 }
+
+document.querySelector('[name="email"]').addEventListener('blur', function(){
+  var v = this.value.trim();
+  var err = document.getElementById('fError');
+  if(v && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)){
+    err.textContent = currentLang==='en'?'Please enter a valid email (e.g. name@example.com).':'Adresse e-mail invalide.';
+    err.classList.add('show');
+  } else { err.classList.remove('show'); }
+});
+
+
+var countries=[
+  {flag:"https://flagcdn.com/w20/ma.png",name:"Morocco",code:"+212"},
+  {flag:"https://flagcdn.com/w20/fr.png",name:"France",code:"+33"},
+  {flag:"https://flagcdn.com/w20/dz.png",name:"Algeria",code:"+213"},
+  {flag:"https://flagcdn.com/w20/tn.png",name:"Tunisia",code:"+216"},
+  {flag:"https://flagcdn.com/w20/es.png",name:"Spain",code:"+34"},
+  {flag:"https://flagcdn.com/w20/be.png",name:"Belgium",code:"+32"},
+  {flag:"https://flagcdn.com/w20/ch.png",name:"Switzerland",code:"+41"},
+  {flag:"https://flagcdn.com/w20/gb.png",name:"United Kingdom",code:"+44"},
+  {flag:"https://flagcdn.com/w20/us.png",name:"United States",code:"+1"},
+  {flag:"https://flagcdn.com/w20/ca.png",name:"Canada",code:"+1"},
+  {flag:"https://flagcdn.com/w20/de.png",name:"Germany",code:"+49"},
+  {flag:"https://flagcdn.com/w20/it.png",name:"Italy",code:"+39"},
+  {flag:"https://flagcdn.com/w20/nl.png",name:"Netherlands",code:"+31"},
+  {flag:"https://flagcdn.com/w20/pt.png",name:"Portugal",code:"+351"},
+  {flag:"https://flagcdn.com/w20/sa.png",name:"Saudi Arabia",code:"+966"},
+  {flag:"https://flagcdn.com/w20/ae.png",name:"UAE",code:"+971"},
+  {flag:"https://flagcdn.com/w20/qa.png",name:"Qatar",code:"+974"},
+  {flag:"https://flagcdn.com/w20/kw.png",name:"Kuwait",code:"+965"},
+  {flag:"https://flagcdn.com/w20/ly.png",name:"Libya",code:"+218"},
+  {flag:"https://flagcdn.com/w20/mr.png",name:"Mauritania",code:"+222"},
+  {flag:"https://flagcdn.com/w20/sn.png",name:"Senegal",code:"+221"},
+  {flag:"https://flagcdn.com/w20/ci.png",name:"Côte d'Ivoire",code:"+225"},
+  {flag:"https://flagcdn.com/w20/ml.png",name:"Mali",code:"+223"},
+  {flag:"https://flagcdn.com/w20/br.png",name:"Brazil",code:"+55"},
+  {flag:"https://flagcdn.com/w20/mx.png",name:"Mexico",code:"+52"},
+  {flag:"https://flagcdn.com/w20/cn.png",name:"China",code:"+86"},
+  {flag:"https://flagcdn.com/w20/jp.png",name:"Japan",code:"+81"},
+  {flag:"https://flagcdn.com/w20/in.png",name:"India",code:"+91"},
+  {flag:"https://flagcdn.com/w20/ru.png",name:"Russia",code:"+7"},
+  {flag:"https://flagcdn.com/w20/tr.png",name:"Turkey",code:"+90"}
+];
+var selectedCode="+212";
+
+function renderFlags(list){
+  var el=document.getElementById("flagList");
+  if(!el)return;
+  el.innerHTML=list.map(function(c){
+    return "<div class='flag-option' onclick='selectFlag(\""+c.flag+"\",\""+c.code+"\",\""+c.name+"\")'>"
+      +"<img src='"+c.flag+"' style='width:20px;height:14px;object-fit:cover;border-radius:2px;flex-shrink:0;'> "+c.name
+      +"<span class='f-code'>"+c.code+"</span></div>";
+  }).join("");
+}
+
+function filterFlags(q){
+  var r=q?countries.filter(function(c){return c.name.toLowerCase().includes(q.toLowerCase())||c.code.includes(q);}):countries;
+  renderFlags(r);
+}
+
+function selectFlag(flag,code,name){
+  var img=document.getElementById("flagEmoji");
+  img.src=flag;
+  document.getElementById("flagCode").textContent=code;
+  selectedCode=code;
+  document.getElementById("flagDD").style.display="none";
+  document.getElementById("phoneInput").focus();
+}
+
+function toggleFlagDD(){
+  var dd=document.getElementById("flagDD");
+  var open=dd.style.display==="none";
+  dd.style.display=open?"block":"none";
+  if(open){document.getElementById("flagSearch").value="";renderFlags(countries);setTimeout(function(){document.getElementById("flagSearch").focus();},50);}
+}
+
+document.addEventListener("click",function(e){
+  var fs=document.getElementById("flagSelect");
+  if(fs&&!fs.contains(e.target))document.getElementById("flagDD").style.display="none";
+});
+
+renderFlags(countries);
+
 </script>
 
 <div class="lb-overlay" id="lb" onclick="if(event.target===this)closeLb()">
