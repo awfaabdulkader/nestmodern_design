@@ -4,8 +4,9 @@
   status = 200
 
 [[headers]]
-  for = "/*"
+  for = "/*.html"
   [headers.values]
+      X-Robots-Tag = "index, follow"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
